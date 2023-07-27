@@ -8,7 +8,7 @@ const Task = ({ title, description, idx }) => {
   };
 
   return (
-    <li className="list-group-item bg-light">
+    <li className={`list-group-item ${isChecked ? "bg-success bg-opacity-50" : "bg-light"}`}>
       <label
         className={`form-check-label stretched-link ${
           isChecked && "text-decoration-line-through"
