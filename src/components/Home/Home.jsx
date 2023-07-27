@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Header from "../Header/Header";
-import TaskList from "../TaskList/TaskList";
 import FormTask from "../FormTask/FormTask";
 
-const Home = () => {
-  const [tasks, setTasks] = useState([]);
+localStorage.setItem("task-list", JSON.stringify([]));
 
+const Home = () => {
   return (
     <div className="container">
       <div className="card">
@@ -13,8 +12,7 @@ const Home = () => {
           <Header />
         </div>
         <div className="card-body">
-          <FormTask tasks={tasks} setTasks={setTasks} />
-          <TaskList tasks={tasks} />
+          <FormTask />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Task = ({ value, idx }) => {
+const Task = ({ title, description, idx }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheck = () => {
@@ -9,21 +9,22 @@ const Task = ({ value, idx }) => {
 
   return (
     <li className="list-group-item bg-light">
-      <input
-        className="orm-check-input me-1"
-        type="checkbox"
-        id={`${value}${idx}`}
-        checked={isChecked}
-        onChange={handleCheck}
-      />
       <label
         className={`form-check-label stretched-link ${
           isChecked && "text-decoration-line-through"
         }`}
-        htmlFor={`${value}${idx}`}
+        htmlFor={`${title}${idx}`}
       >
-        {value}
+        <input
+        className="form-check-input me-1"
+        type="checkbox"
+        id={`${title}${idx}`}
+        checked={isChecked}
+        onChange={handleCheck}
+      />
+        {title}
       </label>
+      <p className="fw-light fst-italic">{description}</p>
     </li>
   );
 };
