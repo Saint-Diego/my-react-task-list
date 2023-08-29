@@ -1,1 +1,1 @@
-export const store = localStorage.getItem("task-list") || [];
+export const store = localStorage.getItem("task-list") ?? "[]";
