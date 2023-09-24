@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { TaskContext } from "../../context/createContextTask";
 import "./TaskList.css";
 import Task from "../Task/Task";
 
-const TaskList = ({ setInput, setOptions, tasks, setTasks }) => {
+const TaskList = ({ setInput, setOptions }) => {
+  const { tasks } = useContext(TaskContext);
+
   return (
     <div id="tasks-list" className="overflow-auto text-start">
       <ul className="list-group">
@@ -16,8 +19,6 @@ const TaskList = ({ setInput, setOptions, tasks, setTasks }) => {
             status={task.status}
             setInput={setInput}
             setOptions={setOptions}
-            tasks={tasks}
-            setTasks={setTasks}
           />
         ))}
       </ul>
