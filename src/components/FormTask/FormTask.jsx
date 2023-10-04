@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { store } from "../../store";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { TaskContext } from "../../context/createContextTask";
 import { validateTask } from "../../utils/validate";
 import { showAlertWithTimer } from "../../utils/alerts";
 import TaskList from "../TaskList/TaskList";
@@ -19,17 +18,21 @@ const isObjectEmpty = (objectName) => {
 const SAVE = "save";
 const EDIT = "edit";
 
-const FormTask = ({ tasks, setTasks }) => {
+const FormTask = () => {
   const [input, setInput] = useState(newInput);
   const [error, setError] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
-  const [options, setOptions] = useState({ index: 0, action: SAVE });
+  const [options, setOptions] = useState({ id: 0, action: SAVE });
+  const { tasks, crear, actualizar } = useContext(TaskContext);
   const inputRef = useRef();
 
   useEffect(() => {
-    setTasks(JSON.parse(store));
     inputRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("task-list", JSON.stringify(tasks));
+  }, [tasks]);
 
   useEffect(() => {
     if (input.title && input.description) setIsDisabled(false);
@@ -45,8 +48,7 @@ const FormTask = ({ tasks, setTasks }) => {
     e.preventDefault();
     if (isObjectEmpty(error)) {
       if (options.action === SAVE) {
-        input.id = uuidv4();
-        setTasks([...tasks, input]);
+        crear(input);
         showAlertWithTimer(
           `<i class="bi bi-hand-thumbs-up text-primary"></i>
           Tarea guardada correctamente`,
@@ -54,12 +56,11 @@ const FormTask = ({ tasks, setTasks }) => {
           "success"
         );
       } else if (options.action === EDIT) {
-        const { title, description } = input;
-        tasks[options.index] = { ...tasks[options.index], title, description };
-        setTasks([...tasks]);
+        actualizar(options?.id, input);
         showAlertWithTimer(
           `<i class="bi bi-hand-thumbs-up text-primary"></i>
-          Tarea actualizada correctamente`,          "",
+          Tarea actualizada correctamente`,
+          "",
           "success"
         );
         setOptions({ ...options, action: SAVE });
@@ -122,12 +123,7 @@ const FormTask = ({ tasks, setTasks }) => {
         </button>
       </form>
       <hr className="row mt-3" />
-      <TaskList
-        setInput={setInput}
-        setOptions={setOptions}
-        tasks={tasks}
-        setTasks={setTasks}
-      />
+      <TaskList setInput={setInput} setOptions={setOptions} />
     </>
   );
 };

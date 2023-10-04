@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Task.css";
+import { TaskContext } from "../../context/createContextTask";
 import { showAlertDelete, showAlertWithTimer } from "../../utils/alerts";
 
 // const joinTitle = (value) => {
@@ -14,14 +15,12 @@ const Task = ({
   status,
   setInput,
   setOptions,
-  tasks,
-  setTasks,
 }) => {
   const [isChecked, setIsChecked] = useState(status);
+  const { actualizar, eliminar } = useContext(TaskContext);
 
   useEffect(() => {
-    tasks[index] = { ...tasks[index], status: isChecked };
-    setTasks([...tasks]);
+    actualizar(id, { status: isChecked });
   }, [isChecked]);
 
   const handleCheck = () => {
@@ -31,7 +30,7 @@ const Task = ({
   const handleClickUpdate = (e) => {
     e.preventDefault();
     setInput((prevInput) => ({ ...prevInput, title, description }));
-    setOptions((prevOptios) => ({ ...prevOptios, index, action: "edit" }));
+    setOptions((prevOptios) => ({ ...prevOptios, id, action: "edit" }));
   };
 
   const handleClickDelete = async (e) => {
@@ -43,8 +42,7 @@ const Task = ({
       true
     );
     if (action.isConfirmed) {
-      tasks.splice(index, 1);
-      setTasks([...tasks]);
+      eliminar(id);
       showAlertWithTimer(
         `<i class="bi bi-hand-thumbs-up text-primary"></i>
       Tarea eliminada correctamente`,
