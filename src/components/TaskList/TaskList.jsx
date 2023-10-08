@@ -1,27 +1,28 @@
-import React from "react";
-import "./TaskList.css";
+import React, { useContext } from "react";
+import { Box, List } from "@chakra-ui/react";
+import { TaskContext } from "../../context/createContextTask";
 import Task from "../Task/Task";
 
-const TaskList = ({ setInput, setOptions, tasks, setTasks }) => {
+const TaskList = ({ setInput, setOptions }) => {
+  const { tasks } = useContext(TaskContext);
+
   return (
-    <div id="tasks-list" className="overflow-auto text-start">
-      <ul className="list-group">
+    <Box h="250px !important" overflow="auto" textAlign="start">
+      <List pl={0}>
         {tasks?.map((task, index) => (
           <Task
             key={index}
-            id={task.id}
+            id={task?.id}
             index={index}
-            title={task.title}
-            description={task.description}
-            status={task.status}
+            title={task?.title}
+            description={task?.description}
+            status={task?.status}
             setInput={setInput}
             setOptions={setOptions}
-            tasks={tasks}
-            setTasks={setTasks}
           />
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 };
 

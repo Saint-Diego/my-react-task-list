@@ -1,10 +1,11 @@
-import React from 'react'
+import React from 'react';
+import { Box, Heading } from '@chakra-ui/react';
 
 const Header = () => {
   return (
-    <div>
-      <h1>Lista de Tareas</h1>
-    </div>
+    <Box py={2} bgColor="blackAlpha.50">
+      <Heading size="3xl">Lista de Tareas</Heading>
+    </Box>
   )
 }
 

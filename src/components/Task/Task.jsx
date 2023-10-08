@@ -1,5 +1,15 @@
-import React, { useEffect, useState } from "react";
-import "./Task.css";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Badge,
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  ListItem,
+  Text,
+} from "@chakra-ui/react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { TaskContext } from "../../context/createContextTask";
 import { showAlertDelete, showAlertWithTimer } from "../../utils/alerts";
 
 // const joinTitle = (value) => {
@@ -14,14 +24,12 @@ const Task = ({
   status,
   setInput,
   setOptions,
-  tasks,
-  setTasks,
 }) => {
   const [isChecked, setIsChecked] = useState(status);
+  const { actualizar, eliminar } = useContext(TaskContext);
 
   useEffect(() => {
-    tasks[index] = { ...tasks[index], status: isChecked };
-    setTasks([...tasks]);
+    actualizar(id, { status: isChecked });
   }, [isChecked]);
 
   const handleCheck = () => {
@@ -31,7 +39,7 @@ const Task = ({
   const handleClickUpdate = (e) => {
     e.preventDefault();
     setInput((prevInput) => ({ ...prevInput, title, description }));
-    setOptions((prevOptios) => ({ ...prevOptios, index, action: "edit" }));
+    setOptions((prevOptios) => ({ ...prevOptios, id, action: "edit" }));
   };
 
   const handleClickDelete = async (e) => {
@@ -43,8 +51,7 @@ const Task = ({
       true
     );
     if (action.isConfirmed) {
-      tasks.splice(index, 1);
-      setTasks([...tasks]);
+      eliminar(id);
       showAlertWithTimer(
         `<i class="bi bi-hand-thumbs-up text-primary"></i>
       Tarea eliminada correctamente`,
@@ -55,45 +62,54 @@ const Task = ({
   };
 
   return (
-    <li
-      className={`list-group-item d-flex justify-content-between align-items-center rounded my-1 ${
-        isChecked ? "bg-success-subtle" : "bg-light"
-      }`}
-    >
-      <div className="me-auto text-dark-emphasis">
-        <div className="fw-bold">
-          <input
-            className="form-check-input me-1"
-            type="checkbox"
-            id={`task-${index}`}
-            checked={isChecked}
-            onChange={handleCheck}
-          />
-          <label
-            className={`form-check-label ${
-              isChecked && "text-decoration-line-through"
-            }`}
-            htmlFor={`task-${index}`}
-          >
-            {title}
-          </label>
-        </div>
-        <span className="fw-light fst-italic">{description}</span>
-      </div>
-      <div className="badge options">
-        <button
-          className="bg-transparent border-0"
-          // data-bs-toggle="modal"
-          // data-bs-target="#editTask"
-          onClick={handleClickUpdate}
-        >
-          <i className="bi bi-pencil-square text-info"></i>
-        </button>
-        <button className="bg-transparent border-0" onClick={handleClickDelete}>
-          <i className="bi bi-trash3 text-danger"></i>
-        </button>
-      </div>
-    </li>
+    <ListItem>
+      <Flex
+        mb={1}
+        borderRadius="md"
+        bgColor={`${isChecked ? "#d1e7dd" : "rgba(248,249,250,1)"}`}
+      >
+        <Box w="100%" ml="3" pt={2} color="#495057">
+          <Flex justifyContent="space-between" fontWeight="bold">
+            <Checkbox
+              me={1}
+              textDecoration={`${isChecked && "line-through"}`}
+              id={`task-${index}`}
+              checked={isChecked}
+              onChange={handleCheck}
+            >
+              {title}
+            </Checkbox>
+            <Badge ml={1} bgColor="transparent">
+              <Button
+                bgColor="transparent"
+                border="0"
+                fontSize="0.8rem"
+                h="25px"
+                minW="1.5rem"
+                p={0}
+                variant="ghost"
+                onClick={handleClickUpdate}
+              >
+                <EditIcon color="#0dcaf0" />
+              </Button>
+              <Button
+                bgColor="transparent"
+                border="0"
+                fontSize="0.8rem"
+                h="25px"
+                minW="1.5rem"
+                p={0}
+                variant="ghost"
+                onClick={handleClickDelete}
+              >
+                <DeleteIcon color="#dc3545" />
+              </Button>
+            </Badge>
+          </Flex>
+          <Text fontSize="md">{description}</Text>
+        </Box>
+      </Flex>
+    </ListItem>
   );
 };
 
