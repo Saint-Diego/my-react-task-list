@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { store } from "../store";
 
 export const useHandleProcedure = () => {
   const [tasks, setTasks] = useState(JSON.parse(store));
 
+  useEffect(() => {
+    localStorage.setItem("task-list", JSON.stringify(tasks));
+  }, [tasks]);
+
   const crear = (input) => {
-    input.id = uuidv4();
-    setTasks([...tasks, input]);
+    setTasks([...tasks, { id: uuidv4(), ...input, status: false }]);
   };
 
   const actualizar = (id, input) => {

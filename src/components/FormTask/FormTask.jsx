@@ -1,14 +1,22 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Icon,
+  Button,
+  Divider,
+  Textarea,
+  Input,
+  Tag,
+  FormControl,
+} from "@chakra-ui/react";
+import { MdOutlineAdd, MdOutlineModeEdit } from "react-icons/md";
 import { TaskContext } from "../../context/createContextTask";
 import { validateTask } from "../../utils/validate";
 import { showAlertWithTimer } from "../../utils/alerts";
 import TaskList from "../TaskList/TaskList";
 
 const newInput = {
-  id: 0,
   title: "",
   description: "",
-  status: false,
 };
 
 const isObjectEmpty = (objectName) => {
@@ -23,16 +31,12 @@ const FormTask = () => {
   const [error, setError] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
   const [options, setOptions] = useState({ id: 0, action: SAVE });
-  const { tasks, crear, actualizar } = useContext(TaskContext);
+  const { crear, actualizar } = useContext(TaskContext);
   const inputRef = useRef();
 
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("task-list", JSON.stringify(tasks));
-  }, [tasks]);
 
   useEffect(() => {
     if (input.title && input.description) setIsDisabled(false);
@@ -56,7 +60,7 @@ const FormTask = () => {
           "success"
         );
       } else if (options.action === EDIT) {
-        actualizar(options?.id, input);
+        actualizar(options.id, input);
         showAlertWithTimer(
           `<i class="bi bi-hand-thumbs-up text-primary"></i>
           Tarea actualizada correctamente`,
@@ -75,31 +79,26 @@ const FormTask = () => {
   };
 
   const showMessageError = (value) => (
-    <div
-      className="alert alert-danger alert-dismissible fade show my-2"
-      role="alert"
-    >
-      <span>{value}</span>
-    </div>
+    <Tag my={1} py={3} w="100%" justifyContent="center" colorScheme="red">
+      {value}
+    </Tag>
   );
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <input
-          className="form-control rounded my-1"
-          type="text"
+      <FormControl>
+        <Input
+          my={1}
           id="task"
           name="title"
           ref={inputRef}
           value={input.title}
           placeholder="Ingrese tarea"
           onChange={handleChange}
-          // required
+          isInvalid={error.title}
         />
         {error.title && showMessageError(error.title)}
-        <textarea
-          className="form-control"
+        <Textarea
           id="description"
           name="description"
           cols="10"
@@ -107,22 +106,25 @@ const FormTask = () => {
           value={input.description}
           placeholder="Ingrese una breve descripción"
           onChange={handleChange}
-          // required
-        ></textarea>
+          isInvalid={error.description}
+        ></Textarea>
         {error.description && showMessageError(error.description)}
-        <button
-          className="btn btn-info rounded my-1 mx-0 w-100"
-          type="submit"
-          disabled={isDisabled}
+        <Button
+          my={1}
+          w="100%"
+          border="none"
+          colorScheme="cyan"
+          isDisabled={isDisabled}
+          onClick={handleSubmit}
         >
           {options.action === SAVE ? (
-            <i className="bi bi-plus-lg text-white"></i>
+            <Icon as={MdOutlineAdd} boxSize={6} color="white" />
           ) : (
-            <i className="bi bi-pencil text-white"></i>
+            <Icon as={MdOutlineModeEdit} boxSize={6} color="white" />
           )}
-        </button>
-      </form>
-      <hr className="row mt-3" />
+        </Button>
+      </FormControl>
+      <Divider borderColor="blackAlpha.500" />
       <TaskList setInput={setInput} setOptions={setOptions} />
     </>
   );

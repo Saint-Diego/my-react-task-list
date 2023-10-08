@@ -4,24 +4,33 @@ import Header from "./components/Header/Header";
 import FormTask from "./components/FormTask/FormTask";
 import Footer from "./components/Footer/Footer";
 import ContextTask from "./context/ContextTask";
+import {
+  Box,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Container,
+  Divider,
+} from "@chakra-ui/react";
 
 function App() {
   return (
     <>
       <ContextTask>
-        <div className="container">
-          <div className="card">
-            <div className="card-header">
+        <Container>
+          <Card>
+            <CardHeader pb={1}>
               <Header />
-            </div>
-            <div className="card-body">
+            </CardHeader>
+            <CardBody>
               <FormTask />
-            </div>
-            <div className="card-footer">
+            </CardBody>
+            <CardFooter>
               <Footer />
-            </div>
-          </div>
-        </div>
+            </CardFooter>
+          </Card>
+        </Container>
       </ContextTask>
     </>
   );

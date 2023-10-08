@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TaskContext } from "../../context/createContextTask";
 import { showAlertDelete, showAlertWithTimer } from "../../utils/alerts";
+import { Button, Flex, Text } from "@chakra-ui/react";
 
 const Footer = () => {
   const [count, setCount] = useState(0);
   const { tasks, limpiar } = useContext(TaskContext);
 
   useEffect(() => {
-    const tasksFilter = tasks.filter((task) => !task.status);
+    const tasksFilter = tasks.filter((task) => !task?.status);
     setCount(tasksFilter.length);
   }, [tasks]);
 
@@ -26,12 +27,12 @@ const Footer = () => {
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center">
-      <span className="text-dark-emphasis">{`Tienes ${count} tareas pendientes`}</span>
-      <button className="btn btn-danger" onClick={handleClickClearAll}>
+    <Flex justifyContent="space-between" alignItems="center" w="100%">
+      <Text m={0} color="#495057">{`Tienes ${count} tareas pendientes`}</Text>
+      <Button colorScheme="red" onClick={handleClickClearAll}>
         Limpiar Todo
-      </button>
-    </div>
+      </Button>
+    </Flex>
   );
 };
 
